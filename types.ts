@@ -20,6 +20,7 @@ export interface LessonContent {
   codeExample: string;
   codeExplanation: string; // Markdown formatted text
   challenge: string;
+  expectedOutput?: string; // The static output to display when "Run" is clicked
 }
 
 export interface ChatMessage {

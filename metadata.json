@@ -1,5 +1,5 @@
 {
   "name": "PyMaster: Interactive Python Learning",
-  "description": "A comprehensive, AI-powered Python learning platform covering Beginner to Advanced topics, Machine Learning, Computer Vision, Networking, and UI development.",
+  "description": "A comprehensive offline Python learning platform covering Beginner to Advanced topics, Machine Learning, Computer Vision, Networking, and UI development.",
   "requestFramePermissions": []
 }

@@ -1,10 +1,9 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { TOPICS } from '../constants';
-import { generateLessonContent, askFollowUp } from '../services/geminiService';
-import { LessonContent, ChatMessage } from '../types';
+import { TOPICS, LESSON_DATA } from '../constants';
+import { LessonContent } from '../types';
 import CodeBlock from '../components/CodeBlock';
-import { ArrowLeft, Send, Sparkles, MessageSquare, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
 import { parse } from 'marked';
 
 const LessonView: React.FC = () => {
@@ -15,13 +14,6 @@ const LessonView: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
-  // Chat state
-  const [chatOpen, setChatOpen] = useState(false);
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [input, setInput] = useState('');
-  const [sending, setSending] = useState(false);
-  const chatEndRef = useRef<HTMLDivElement>(null);
-
   const topic = TOPICS.find(t => t.id === topicId);
 
   // Navigation Logic
@@ -39,41 +31,23 @@ const LessonView: React.FC = () => {
 
     // Reset state for new topic
     setContent(null);
-    setMessages([]);
-    setChatOpen(false);
 
     const fetchContent = async () => {
         setLoading(true);
-        try {
-            const data = await generateLessonContent(topic.title, topic.category);
-            setContent(data);
-        } catch (err) {
-            setError("Failed to generate content. Please try again.");
-        } finally {
-            setLoading(false);
+        // Simulate network delay for a smoother feel, though it's instant offline
+        await new Promise(resolve => setTimeout(resolve, 300));
+        
+        if (topicId && LESSON_DATA[topicId]) {
+            setContent(LESSON_DATA[topicId]);
+            setError(null);
+        } else {
+            setError("Content coming soon!");
         }
+        setLoading(false);
     };
 
     fetchContent();
-  }, [topicId]); // Dependency on topicId ensures reload on navigation
-
-  useEffect(() => {
-      chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, chatOpen]);
-
-  const handleSendMessage = async () => {
-      if (!input.trim() || !content) return;
-      
-      const userMsg = input;
-      setInput('');
-      setMessages(prev => [...prev, { role: 'user', text: userMsg }]);
-      setSending(true);
-
-      const response = await askFollowUp(userMsg, `Topic: ${content.title}. Explanation: ${content.explanation}`);
-      
-      setMessages(prev => [...prev, { role: 'model', text: response }]);
-      setSending(false);
-  };
+  }, [topicId, topic]); 
 
   if (loading) {
       return (
@@ -84,7 +58,7 @@ const LessonView: React.FC = () => {
                       <Sparkles size={20} className="animate-pulse" />
                   </div>
               </div>
-              <p className="text-slate-400 font-medium animate-pulse">Consulting the AI Tutor...</p>
+              <p className="text-slate-400 font-medium animate-pulse">Loading Lesson...</p>
           </div>
       );
   }
@@ -138,7 +112,11 @@ const LessonView: React.FC = () => {
               </span>
               Live Example
           </h2>
-          <CodeBlock code={content.codeExample} explanation={content.codeExplanation} />
+          <CodeBlock 
+              code={content.codeExample} 
+              explanation={content.codeExplanation} 
+              expectedOutput={content.expectedOutput}
+          />
       </div>
 
       {/* Challenge Section */}
@@ -186,82 +164,6 @@ const LessonView: React.FC = () => {
               </div>
               <ChevronRight size={20} />
           </button>
-      </div>
-
-      {/* Floating Chat Interface */}
-      <div className={`fixed bottom-6 right-6 z-40 transition-all duration-300 ${chatOpen ? 'w-[90vw] md:w-[400px] h-[500px]' : 'w-auto h-auto'}`}>
-          {!chatOpen && (
-              <button 
-                onClick={() => setChatOpen(true)}
-                className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-6 py-4 rounded-full shadow-2xl shadow-blue-500/30 font-bold transition-all transform hover:scale-105"
-              >
-                  <MessageSquare size={20} />
-                  Ask Tutor
-              </button>
-          )}
-
-          {chatOpen && (
-              <div className="flex flex-col h-full bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl overflow-hidden">
-                  <div className="flex items-center justify-between p-4 bg-slate-800 border-b border-slate-700">
-                      <h3 className="font-bold text-white flex items-center gap-2">
-                          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                          AI Tutor Chat
-                      </h3>
-                      <button 
-                        onClick={() => setChatOpen(false)}
-                        className="text-slate-400 hover:text-white"
-                      >
-                          &times;
-                      </button>
-                  </div>
-                  
-                  <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-900/95">
-                      {messages.length === 0 && (
-                          <div className="text-center text-slate-500 text-sm mt-10">
-                              Ask me anything about this lesson!<br/>
-                              e.g., "Why did we use a class here?"
-                          </div>
-                      )}
-                      {messages.map((msg, idx) => (
-                          <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                              <div className={`max-w-[85%] rounded-2xl px-4 py-2 text-sm ${msg.role === 'user' ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-200'}`}>
-                                  {msg.text}
-                              </div>
-                          </div>
-                      ))}
-                      {sending && (
-                          <div className="flex justify-start">
-                              <div className="bg-slate-800 rounded-2xl px-4 py-3">
-                                  <div className="flex gap-1">
-                                      <div className="w-2 h-2 bg-slate-500 rounded-full animate-bounce"></div>
-                                      <div className="w-2 h-2 bg-slate-500 rounded-full animate-bounce delay-75"></div>
-                                      <div className="w-2 h-2 bg-slate-500 rounded-full animate-bounce delay-150"></div>
-                                  </div>
-                              </div>
-                          </div>
-                      )}
-                      <div ref={chatEndRef}></div>
-                  </div>
-
-                  <div className="p-3 bg-slate-800 border-t border-slate-700 flex gap-2">
-                      <input 
-                        type="text" 
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-                        placeholder="Type a question..."
-                        className="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-blue-500"
-                      />
-                      <button 
-                        onClick={handleSendMessage}
-                        disabled={sending || !input.trim()}
-                        className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white p-2 rounded-xl transition-colors"
-                      >
-                          <Send size={18} />
-                      </button>
-                  </div>
-              </div>
-          )}
       </div>
     </div>
   );

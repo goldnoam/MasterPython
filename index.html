@@ -31,17 +31,29 @@
       ::-webkit-scrollbar-thumb:hover {
         background: #64748b; 
       }
+      /* Animations */
+      @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+      }
+      .animate-fade-in {
+        animation: fadeIn 0.2s ease-out forwards;
+      }
     </style>
   <script type="importmap">
 {
   "imports": {
-    "react/": "https://esm.sh/react@^19.2.1/",
-    "react": "https://esm.sh/react@^19.2.1",
+    "react": "https://esm.sh/react@18.2.0",
+    "react/": "https://esm.sh/react@18.2.0/",
+    "react-dom": "https://esm.sh/react-dom@18.2.0",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+    "lucide-react": "https://esm.sh/lucide-react@0.344.0?deps=react@18.2.0",
+    "react-router-dom": "https://esm.sh/react-router-dom@6.22.3?deps=react@18.2.0,react-dom@18.2.0",
+    "marked": "https://esm.sh/marked@12.0.1",
+    "prettier/standalone": "https://esm.sh/prettier@3.2.5/standalone",
+    "prettier/plugins/python": "https://esm.sh/@prettier/plugin-python@3.1.1",
     "react-dom/": "https://esm.sh/react-dom@^19.2.1/",
-    "lucide-react": "https://esm.sh/lucide-react@^0.559.0",
-    "@google/genai": "https://esm.sh/@google/genai@^1.32.0",
-    "react-router-dom": "https://esm.sh/react-router-dom@^7.10.1",
-    "marked": "https://esm.sh/marked@12.0.0"
+    "prettier/": "https://esm.sh/prettier@^3.7.4/"
   }
 }
 </script>
