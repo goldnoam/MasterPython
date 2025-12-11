@@ -4,7 +4,7 @@ import { TOPICS } from '../constants';
 import { generateLessonContent, askFollowUp } from '../services/geminiService';
 import { LessonContent, ChatMessage } from '../types';
 import CodeBlock from '../components/CodeBlock';
-import { ArrowLeft, Send, Sparkles, MessageSquare } from 'lucide-react';
+import { ArrowLeft, Send, Sparkles, MessageSquare, ChevronLeft, ChevronRight } from 'lucide-react';
 import { parse } from 'marked';
 
 const LessonView: React.FC = () => {
@@ -24,12 +24,23 @@ const LessonView: React.FC = () => {
 
   const topic = TOPICS.find(t => t.id === topicId);
 
+  // Navigation Logic
+  const categoryTopics = topic ? TOPICS.filter(t => t.category === topic.category) : [];
+  const currentIndex = topic ? categoryTopics.findIndex(t => t.id === topic.id) : -1;
+  const prevTopic = currentIndex > 0 ? categoryTopics[currentIndex - 1] : null;
+  const nextTopic = currentIndex !== -1 && currentIndex < categoryTopics.length - 1 ? categoryTopics[currentIndex + 1] : null;
+
   useEffect(() => {
     if (!topic) {
         setError("Topic not found");
         setLoading(false);
         return;
     }
+
+    // Reset state for new topic
+    setContent(null);
+    setMessages([]);
+    setChatOpen(false);
 
     const fetchContent = async () => {
         setLoading(true);
@@ -44,7 +55,7 @@ const LessonView: React.FC = () => {
     };
 
     fetchContent();
-  }, [topic]);
+  }, [topicId]); // Dependency on topicId ensures reload on navigation
 
   useEffect(() => {
       chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -127,14 +138,7 @@ const LessonView: React.FC = () => {
               </span>
               Live Example
           </h2>
-          <CodeBlock code={content.codeExample} />
-          <div className="bg-slate-900/50 rounded-xl p-6 border border-slate-800/50">
-              <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3">Code Analysis</h3>
-              <div 
-                className="prose prose-invert prose-sm max-w-none text-slate-400"
-                dangerouslySetInnerHTML={{ __html: parse(content.codeExplanation) as string }} 
-              />
-          </div>
+          <CodeBlock code={content.codeExample} explanation={content.codeExplanation} />
       </div>
 
       {/* Challenge Section */}
@@ -147,6 +151,41 @@ const LessonView: React.FC = () => {
           <p className="text-indigo-100/80 leading-relaxed relative z-10">
               {content.challenge}
           </p>
+      </div>
+
+      {/* Navigation Buttons */}
+      <div className="flex items-center justify-between pt-6 border-t border-slate-800">
+          <button 
+              onClick={() => prevTopic && navigate(`/lesson/${prevTopic.id}`)}
+              disabled={!prevTopic}
+              className={`flex items-center gap-2 px-5 py-3 rounded-xl border transition-all ${
+                  prevTopic 
+                  ? 'bg-slate-800 border-slate-700 text-slate-200 hover:border-blue-500 hover:text-blue-400 cursor-pointer' 
+                  : 'bg-slate-900/50 border-slate-800 text-slate-600 cursor-not-allowed'
+              }`}
+          >
+              <ChevronLeft size={20} />
+              <div className="text-left">
+                  <div className="text-xs text-slate-500 font-medium">Previous</div>
+                  <div className="font-semibold">{prevTopic ? prevTopic.title : 'Start of Category'}</div>
+              </div>
+          </button>
+
+          <button 
+              onClick={() => nextTopic && navigate(`/lesson/${nextTopic.id}`)}
+              disabled={!nextTopic}
+              className={`flex items-center gap-2 px-5 py-3 rounded-xl border transition-all ${
+                  nextTopic 
+                  ? 'bg-slate-800 border-slate-700 text-slate-200 hover:border-blue-500 hover:text-blue-400 cursor-pointer' 
+                  : 'bg-slate-900/50 border-slate-800 text-slate-600 cursor-not-allowed'
+              }`}
+          >
+              <div className="text-right">
+                  <div className="text-xs text-slate-500 font-medium">Next</div>
+                  <div className="font-semibold">{nextTopic ? nextTopic.title : 'End of Category'}</div>
+              </div>
+              <ChevronRight size={20} />
+          </button>
       </div>
 
       {/* Floating Chat Interface */}

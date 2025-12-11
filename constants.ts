@@ -17,6 +17,15 @@ export const CATEGORY_ICONS: Record<Category, any> = {
   [Category.UI]: Cpu, // Generic tech icon
 };
 
+export const CATEGORY_DESCRIPTIONS: Record<Category, string> = {
+  [Category.STARTER]: "Master the fundamentals: Variables, Control Flow, and Functions.",
+  [Category.ADVANCED]: "Deep dive into Decorators, Generators, and Concurrency.",
+  [Category.ML]: "Explore Data Science, Neural Networks, and Predictive Models.",
+  [Category.CV]: "Learn Image Processing, Face Detection, and Object Tracking.",
+  [Category.NETWORK]: "Understand Sockets, TCP/IP, and Asynchronous I/O.",
+  [Category.UI]: "Build modern GUIs and Web Applications."
+};
+
 export const TOPICS: Topic[] = [
   // Starter
   { id: 's1', category: Category.STARTER, title: 'Variables & Data Types', description: 'Integers, Strings, Booleans, and Floats.' },
