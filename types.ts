@@ -14,6 +14,13 @@ export interface Topic {
   description: string;
 }
 
+export interface QuizQuestion {
+  question: string;
+  options: string[];
+  correctAnswer: number; // Index of the correct option (0-based)
+  explanation: string;
+}
+
 export interface LessonContent {
   title: string;
   explanation: string; // Markdown formatted text
@@ -21,6 +28,7 @@ export interface LessonContent {
   codeExplanation: string; // Markdown formatted text
   challenge: string;
   expectedOutput?: string; // The static output to display when "Run" is clicked
+  quiz?: QuizQuestion;
 }
 
 export interface ChatMessage {

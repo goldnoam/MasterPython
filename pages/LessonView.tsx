@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { TOPICS, LESSON_DATA } from '../constants';
 import { LessonContent } from '../types';
 import CodeBlock from '../components/CodeBlock';
+import QuizSection from '../components/QuizSection';
 import { ArrowLeft, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
 import { parse } from 'marked';
 
@@ -130,6 +131,13 @@ const LessonView: React.FC = () => {
               {content.challenge}
           </p>
       </div>
+
+      {/* Quiz Section */}
+      {content.quiz && (
+        <div className="mb-12">
+           <QuizSection quiz={content.quiz} />
+        </div>
+      )}
 
       {/* Navigation Buttons */}
       <div className="flex items-center justify-between pt-6 border-t border-slate-800">

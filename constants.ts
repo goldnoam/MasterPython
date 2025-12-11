@@ -85,7 +85,13 @@ print(f"Student: {is_student} (Type: {type(is_student)})")`,
     expectedOutput: `Name: Python Master (Type: <class 'str'>)
 Age: 25 (Type: <class 'int'>)
 Height: 1.75 (Type: <class 'float'>)
-Student: True (Type: <class 'bool'>)`
+Student: True (Type: <class 'bool'>)`,
+    quiz: {
+      question: "Which data type would best represent the number 3.14?",
+      options: ["Integer", "Boolean", "Float", "String"],
+      correctAnswer: 2,
+      explanation: "3.14 is a decimal number, so it is represented as a Float (floating-point number). Integers represent whole numbers."
+    }
   },
   's2': {
     title: 'Control Flow',
@@ -105,7 +111,13 @@ print("Grading complete.")`,
     codeExplanation: "- `if` checks the first condition.\n- `elif` (else if) checks subsequent conditions if the previous ones were False.\n- `else` runs if none of the above conditions were met.\n- The final `print` statement is unindented, so it runs regardless of the outcome.",
     challenge: "Write an if-statement that checks if a variable `temperature` is above 30. If so, print 'Hot', otherwise print 'Nice'.",
     expectedOutput: `Grade: B
-Grading complete.`
+Grading complete.`,
+    quiz: {
+      question: "Which keyword allows you to check an alternative condition if the initial 'if' statement is False?",
+      options: ["else", "elif", "check", "otherwise"],
+      correctAnswer: 1,
+      explanation: "'elif' (short for else if) allows you to check a new condition if the previous 'if' or 'elif' conditions were False."
+    }
   },
   's3': {
     title: 'Loops',
@@ -131,7 +143,13 @@ Count: 3
 T-minus 3
 T-minus 2
 T-minus 1
-Liftoff!`
+Liftoff!`,
+    quiz: {
+      question: "If you want to run a loop exactly 10 times, which construct is most appropriate?",
+      options: ["while loop", "for loop with range()", "if statement", "def statement"],
+      correctAnswer: 1,
+      explanation: "A 'for' loop combined with 'range()' is the standard way to iterate a specific number of times in Python."
+    }
   },
   's4': {
       title: 'Functions',
@@ -148,7 +166,13 @@ print(msg2)`,
       codeExplanation: "- `def greet_user(...)`: Defines the function name and parameters.\n- `time_of_day=\"Day\"`: This is a default parameter. If the caller doesn't provide it, it defaults to \"Day\".\n- `return`: Sends data back to where the function was called.",
       challenge: "Write a function `calculate_area(width, height)` that returns the area of a rectangle.",
       expectedOutput: `Good Morning, Alice!
-Good Day, Bob!`
+Good Day, Bob!`,
+    quiz: {
+      question: "Which keyword is used to define a new function in Python?",
+      options: ["function", "func", "def", "define"],
+      correctAnswer: 2,
+      explanation: "The 'def' keyword (short for define) is used to declare a function in Python."
+    }
   },
   's5': {
       title: 'Lists & Dictionaries',
@@ -168,7 +192,13 @@ print(f"User {user['name']} is an {user['role']}")`,
       codeExplanation: "- `fruits[0]` accesses the first item, `fruits[-1]` accesses the last.\n- `append()` adds an item to the end of the list.\n- Dictionaries are accessed via keys, e.g., `user['name']`.",
       challenge: "Create a list of 3 colors. Then create a dictionary representing a 'Car' with keys 'brand' and 'color'.",
       expectedOutput: `Fruits: Apple and Date
-User Alex is an Admin`
+User Alex is an Admin`,
+    quiz: {
+      question: "How do you access the value associated with the key 'age' in a dictionary named 'person'?",
+      options: ["person.age", "person['age']", "person(age)", "person.get_age()"],
+      correctAnswer: 1,
+      explanation: "Dictionary values are accessed using square brackets with the key inside: person['age']."
+    }
   },
 
   // --- Advanced ---
@@ -191,7 +221,13 @@ say_hello()`,
       challenge: "Write a decorator that prints 'Start' before a function runs and 'End' after it finishes.",
       expectedOutput: `Something is happening before the function is called.
 Hello!
-Something is happening after the function is called.`
+Something is happening after the function is called.`,
+    quiz: {
+      question: "What symbol is used to apply a decorator to a function?",
+      options: ["#", "&", "@", "$"],
+      correctAnswer: 2,
+      explanation: "The '@' symbol is placed above a function definition to apply a decorator."
+    }
   },
   'a2': {
       title: 'Generators',
@@ -208,7 +244,13 @@ for number in countdown(3):
       challenge: "Create a generator function `squares(n)` that yields square numbers up to n.",
       expectedOutput: `3
 2
-1`
+1`,
+    quiz: {
+      question: "Which keyword distinguishes a generator function from a normal function?",
+      options: ["return", "yield", "generate", "emit"],
+      correctAnswer: 1,
+      explanation: "'yield' produces a value and pauses the function's execution, saving its state for the next iteration."
+    }
   },
   'a3': {
     title: 'Context Managers',
@@ -230,7 +272,13 @@ with FileManager("test.txt") as f:
     challenge: "Use `with open('myfile.txt', 'w') as f:` to safely write a string to a file.",
     expectedOutput: `Opening test.txt
 Writing to file...
-Closing test.txt`
+Closing test.txt`,
+    quiz: {
+      question: "What is the primary benefit of using the 'with' statement for file handling?",
+      options: ["It makes the file read-only", "It automatically closes the file, even if errors occur", "It speeds up file writing", "It encrypts the file"],
+      correctAnswer: 1,
+      explanation: "The 'with' statement ensures that cleanup code (like closing a file) runs automatically when the block is exited."
+    }
   },
   'a4': {
       title: 'Concurrency',
@@ -264,7 +312,13 @@ started
 hello
 ... (1 sec delay) ...
 world
-finished`
+finished`,
+    quiz: {
+      question: "Which keywords are used to define and call a coroutine in Python?",
+      options: ["def / call", "async def / await", "coroutine / yield", "thread / start"],
+      correctAnswer: 1,
+      explanation: "`async def` defines a coroutine function, and `await` is used to pause execution until the coroutine completes."
+    }
   },
 
   // --- ML ---
@@ -287,7 +341,13 @@ print(f"Mean:     {mean_val}")`,
       challenge: "Create a numpy array of numbers 1-10 and calculate their sum.",
       expectedOutput: `Original: [1 2 3 4 5]
 Doubled:  [ 2  4  6  8 10]
-Mean:     3.0`
+Mean:     3.0`,
+    quiz: {
+      question: "What is the main advantage of NumPy arrays over Python lists?",
+      options: ["They can hold different data types", "They are faster and more memory efficient", "They are built-in to Python", "They are easier to print"],
+      correctAnswer: 1,
+      explanation: "NumPy arrays are stored in contiguous memory blocks, making operations significantly faster and more memory efficient."
+    }
   },
   'm2': {
       title: 'Pandas DataFrames',
@@ -310,7 +370,13 @@ print(older_users)`,
       challenge: "Create a DataFrame with columns 'Product' and 'Price', then filter for prices under $10.",
       expectedOutput: `      Name  Age    City
 1      Bob   30   Paris
-2  Charlie   35  London`
+2  Charlie   35  London`,
+    quiz: {
+      question: "Which Pandas data structure represents tabular data with rows and columns?",
+      options: ["Series", "Panel", "DataFrame", "Table"],
+      correctAnswer: 2,
+      explanation: "A DataFrame is the primary Pandas structure for 2D tabular data."
+    }
   },
   'm3': {
       title: 'Linear Regression',
@@ -330,7 +396,13 @@ prediction = model.predict([[6]])
 print(f"Predicted score for 6 hours: {prediction[0]}")`,
       codeExplanation: "- `fit(X, y)` trains the model to find the best fit line.\n- `predict(...)` uses that line to estimate values for new data points.",
       challenge: "Predict the output for input 10 given the pattern X=[1,2,3], y=[2,4,6].",
-      expectedOutput: `Predicted score for 6 hours: 100.0`
+      expectedOutput: `Predicted score for 6 hours: 100.0`,
+    quiz: {
+      question: "In Scikit-Learn, which method is used to train the model on data?",
+      options: ["train()", "fit()", "learn()", "optimize()"],
+      correctAnswer: 1,
+      explanation: "The `fit(X, y)` method is used to train the model by fitting it to the provided data."
+    }
   },
   'm4': {
       title: 'Basic Neural Network',
@@ -356,7 +428,13 @@ print("Prediction: [[18.987]]")`,
       challenge: "Define a Sequential model with one Dense layer.",
       expectedOutput: `Model trained.
 Predicting for x = 10.0 (Expected ~19.0)
-Prediction: [[18.987]]`
+Prediction: [[18.987]]`,
+    quiz: {
+      question: "Which Keras layer type connects every neuron in one layer to every neuron in the next?",
+      options: ["Conv2D", "Dense", "Flatten", "Dropout"],
+      correctAnswer: 1,
+      explanation: "A `Dense` layer (fully connected layer) connects every input to every output within that layer."
+    }
   },
 
   // --- CV ---
@@ -378,7 +456,13 @@ print("Pixel at (50,50) - BGR:", image[50, 50])`,
       codeExplanation: "- `np.zeros` creates a black canvas.\n- OpenCV uses BGR (Blue, Green, Red) format, not RGB.\n- `(255, 0, 0)` is pure Blue.",
       challenge: "Create a generic image and draw a red rectangle on it.",
       expectedOutput: `Image shape: (100, 100, 3)
-Pixel at (50,50) - BGR: [255   0   0]`
+Pixel at (50,50) - BGR: [255   0   0]`,
+    quiz: {
+      question: "What color channel order does OpenCV use by default?",
+      options: ["RGB (Red, Green, Blue)", "BGR (Blue, Green, Red)", "CMYK", "Grayscale"],
+      correctAnswer: 1,
+      explanation: "OpenCV uses the BGR (Blue-Green-Red) format by default, unlike most other libraries which use RGB."
+    }
   },
   'c2': {
       title: 'Image Processing',
@@ -401,7 +485,13 @@ print("Detected Edges with Canny algorithm.")`,
       challenge: "Research how to rotate an image using OpenCV.",
       expectedOutput: `Applied Grayscale conversion.
 Applied Gaussian Blur.
-Detected Edges with Canny algorithm.`
+Detected Edges with Canny algorithm.`,
+    quiz: {
+      question: "Which algorithm is commonly used for edge detection in OpenCV?",
+      options: ["Gaussian Blur", "Canny", "Resize", "Threshold"],
+      correctAnswer: 1,
+      explanation: "Canny Edge Detection is a popular multi-stage algorithm used to detect a wide range of edges in images."
+    }
   },
   'c3': {
       title: 'Face Detection',
@@ -425,7 +515,13 @@ print("Drew rectangles at detected coordinates.")`,
       challenge: "What file do you need to load to detect eyes instead of faces?",
       expectedOutput: `Classifier loaded.
 Found 2 faces.
-Drew rectangles at detected coordinates.`
+Drew rectangles at detected coordinates.`,
+    quiz: {
+      question: "What does `detectMultiScale` return?",
+      options: ["The number of faces found", "A list of rectangles (x, y, w, h) for detected objects", "A new image with faces cropped", "True if a face is found"],
+      correctAnswer: 1,
+      explanation: "It returns a list of rectangles, where each rectangle contains the coordinates and dimensions of a detected object."
+    }
   },
   'c4': {
       title: 'Object Tracking',
@@ -445,7 +541,13 @@ print("Processing Frame 2: Tracking success.")`,
       challenge: "Look up the difference between KCF (fast) and CSRT (accurate) trackers.",
       expectedOutput: `Tracker initialized with bounding box.
 Processing Frame 1: Tracking success.
-Processing Frame 2: Tracking success.`
+Processing Frame 2: Tracking success.`,
+    quiz: {
+      question: "What is the primary advantage of Object Tracking over Object Detection in video?",
+      options: ["It is more accurate for static images", "It is generally faster than running detection on every frame", "It can identify the name of the object", "It works in 3D"],
+      correctAnswer: 1,
+      explanation: "Tracking algorithms locate an object in subsequent frames based on its previous position, which is computationally cheaper than detecting it from scratch every time."
+    }
   },
 
   // --- Network ---
@@ -467,7 +569,13 @@ print("Socket created successfully.")`,
       codeExplanation: "- `AF_INET` means IPv4.\n- `SOCK_STREAM` means TCP (reliable, connection-based).",
       challenge: "Find out what port number standard HTTP traffic uses.",
       expectedOutput: `Hostname: localhost
-Socket created successfully.`
+Socket created successfully.`,
+    quiz: {
+      question: "Which socket type constant represents TCP (reliable, connection-based protocol)?",
+      options: ["SOCK_DGRAM", "SOCK_STREAM", "SOCK_RAW", "SOCK_RDM"],
+      correctAnswer: 1,
+      explanation: "`SOCK_STREAM` indicates a TCP socket, while `SOCK_DGRAM` indicates UDP."
+    }
   },
   'n2': {
       title: 'TCP Client/Server',
@@ -486,7 +594,13 @@ print("Server listening on port 12345...")
 # client.close()`,
       codeExplanation: "- `bind`: Associates the socket with a specific address/port.\n- `listen`: Waits for incoming connections.\n- `accept`: Establishes the connection with a client.",
       challenge: "Write a simple client script that connects to localhost port 12345.",
-      expectedOutput: `Server listening on port 12345...`
+      expectedOutput: `Server listening on port 12345...`,
+    quiz: {
+      question: "Which method is used by the server to accept a new incoming connection?",
+      options: ["connect()", "listen()", "accept()", "bind()"],
+      correctAnswer: 2,
+      explanation: "`accept()` waits for an incoming connection and returns a new socket object representing the connection and the client's address."
+    }
   },
   'n3': {
       title: 'HTTP Requests',
@@ -503,7 +617,13 @@ print("Content-Type: application/json; charset=utf-8")`,
       challenge: "Use requests to fetch data from 'https://jsonplaceholder.typicode.com/todos/1'.",
       expectedOutput: `Sending GET request to https://api.github.com...
 Status Code: 200
-Content-Type: application/json; charset=utf-8`
+Content-Type: application/json; charset=utf-8`,
+    quiz: {
+      question: "Which HTTP method is typically used to retrieve data from a server?",
+      options: ["POST", "PUT", "GET", "DELETE"],
+      correctAnswer: 2,
+      explanation: "The GET method is used to request data from a specified resource."
+    }
   },
   'n4': {
       title: 'Async Networking',
@@ -539,7 +659,13 @@ Fetching data 2...
 Fetching data 3...
 Data 1 received
 Data 2 received
-Data 3 received`
+Data 3 received`,
+    quiz: {
+      question: "Which asyncio function is used to run multiple coroutines concurrently?",
+      options: ["asyncio.run()", "asyncio.gather()", "asyncio.sleep()", "asyncio.wait_for()"],
+      correctAnswer: 1,
+      explanation: "`asyncio.gather()` is used to schedule multiple coroutines to run concurrently and waits for all of them to complete."
+    }
   },
 
   // --- UI ---
@@ -566,7 +692,13 @@ print("Contains: Label 'Hello Tkinter!', Button 'Click Me'")`,
       codeExplanation: "- `Tk()` creates the main window.\n- `pack()` is a geometry manager that places widgets in the window.\n- `mainloop()` keeps the window open.",
       challenge: "Create a Tkinter window with two buttons: 'OK' and 'Cancel'.",
       expectedOutput: `Window 'My App' created.
-Contains: Label 'Hello Tkinter!', Button 'Click Me'`
+Contains: Label 'Hello Tkinter!', Button 'Click Me'`,
+    quiz: {
+      question: "Which method starts the Tkinter event loop, keeping the window open?",
+      options: ["run()", "start()", "mainloop()", "execute()"],
+      correctAnswer: 2,
+      explanation: "`mainloop()` tells Tkinter to enter its event loop, waiting for user interaction."
+    }
   },
   'u2': {
       title: 'PyQt/PySide',
@@ -587,7 +719,13 @@ print("Widget: Label 'Hello World'")`,
       challenge: "What is the difference between PyQt6 and PySide6?",
       expectedOutput: `PyQt Application Started
 Window Title: PyQt App
-Widget: Label 'Hello World'`
+Widget: Label 'Hello World'`,
+    quiz: {
+      question: "Every PyQt application must have exactly one instance of which class?",
+      options: ["QMainWindow", "QWidget", "QApplication", "QLabel"],
+      correctAnswer: 2,
+      explanation: "You must create a `QApplication` object to manage the GUI application's control flow and main settings."
+    }
   },
   'u3': {
       title: 'Flask Web App',
@@ -610,7 +748,13 @@ print("Response: <h1>Hello from Flask!</h1>")`,
       challenge: "Create a new route `/about` that returns your name.",
       expectedOutput: `Starting Flask server...
 Serving request: GET /
-Response: <h1>Hello from Flask!</h1>`
+Response: <h1>Hello from Flask!</h1>`,
+    quiz: {
+      question: "What does the `@app.route` decorator do?",
+      options: ["Starts the server", "Maps a URL to a specific function", "Connects to a database", "Imports Flask"],
+      correctAnswer: 1,
+      explanation: "It binds a specific URL (like '/') to the function immediately following it, so the function runs when that URL is visited."
+    }
   },
   'u4': {
       title: 'Streamlit',
@@ -636,6 +780,12 @@ print("Button displayed.")`,
       expectedOutput: `Streamlit app rendering...
 Title: My Data App
 Table displayed.
-Button displayed.`
+Button displayed.`,
+    quiz: {
+      question: "Which Streamlit function is the 'Swiss Army knife' for displaying text, dataframes, and charts?",
+      options: ["st.print()", "st.show()", "st.write()", "st.display()"],
+      correctAnswer: 2,
+      explanation: "`st.write()` is a powerful function that renders different types of content depending on what you pass to it."
+    }
   }
 };

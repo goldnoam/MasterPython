@@ -11,8 +11,12 @@ const Dashboard: React.FC = () => {
 
   const filteredTopics = TOPICS.filter(topic => {
     const matchesCategory = selectedCategory === 'All' || topic.category === selectedCategory;
-    const matchesSearch = topic.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          topic.description.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    const query = searchQuery.toLowerCase().trim();
+    const matchesSearch = !query || 
+                          topic.title.toLowerCase().includes(query) || 
+                          topic.description.toLowerCase().includes(query);
+                          
     return matchesCategory && matchesSearch;
   });
 
@@ -24,7 +28,7 @@ const Dashboard: React.FC = () => {
             </h1>
             <p className="text-slate-400 text-lg max-w-2xl">
                 From basic scripts to Neural Networks and Network Engineering. 
-                Select a topic below to generate a custom interactive lesson powered by Gemini AI.
+                Select a topic below to start an interactive lesson.
             </p>
         </header>
 
@@ -60,7 +64,7 @@ const Dashboard: React.FC = () => {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
                 <input 
                     type="text" 
-                    placeholder="Search topics..." 
+                    placeholder="Search topics and descriptions..." 
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="w-full bg-slate-950 border border-slate-800 rounded-full pl-10 pr-4 py-2 text-sm text-slate-200 focus:outline-none focus:border-blue-500 transition-colors"
