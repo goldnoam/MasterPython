@@ -4,7 +4,7 @@ import { TOPICS, LESSON_DATA } from '../constants';
 import { LessonContent } from '../types';
 import CodeBlock from '../components/CodeBlock';
 import QuizSection from '../components/QuizSection';
-import { ArrowLeft, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Sparkles, ChevronLeft, ChevronRight, RotateCcw, RotateCw } from 'lucide-react';
 import { parse } from 'marked';
 
 const LessonView: React.FC = () => {
@@ -17,11 +17,24 @@ const LessonView: React.FC = () => {
   
   const topic = TOPICS.find(t => t.id === topicId);
 
-  // Navigation Logic
+  // Navigation Logic with Wrap-around
   const categoryTopics = topic ? TOPICS.filter(t => t.category === topic.category) : [];
   const currentIndex = topic ? categoryTopics.findIndex(t => t.id === topic.id) : -1;
-  const prevTopic = currentIndex > 0 ? categoryTopics[currentIndex - 1] : null;
-  const nextTopic = currentIndex !== -1 && currentIndex < categoryTopics.length - 1 ? categoryTopics[currentIndex + 1] : null;
+  
+  let prevTopic = null;
+  let nextTopic = null;
+  let isPrevWrap = false;
+  let isNextWrap = false;
+
+  if (categoryTopics.length > 1 && currentIndex !== -1) {
+    const prevIndex = (currentIndex - 1 + categoryTopics.length) % categoryTopics.length;
+    prevTopic = categoryTopics[prevIndex];
+    isPrevWrap = currentIndex === 0;
+
+    const nextIndex = (currentIndex + 1) % categoryTopics.length;
+    nextTopic = categoryTopics[nextIndex];
+    isNextWrap = currentIndex === categoryTopics.length - 1;
+  }
 
   useEffect(() => {
     if (!topic) {
@@ -150,10 +163,12 @@ const LessonView: React.FC = () => {
                   : 'bg-slate-900/50 border-slate-800 text-slate-600 cursor-not-allowed'
               }`}
           >
-              <ChevronLeft size={20} />
+              {isPrevWrap ? <RotateCcw size={20} className="text-slate-400" /> : <ChevronLeft size={20} />}
               <div className="text-left">
-                  <div className="text-xs text-slate-500 font-medium">Previous</div>
-                  <div className="font-semibold">{prevTopic ? prevTopic.title : 'Start of Category'}</div>
+                  <div className="text-xs text-slate-500 font-medium">
+                    {isPrevWrap ? 'Loop to End' : 'Previous'}
+                  </div>
+                  <div className="font-semibold">{prevTopic ? prevTopic.title : 'No Previous Topic'}</div>
               </div>
           </button>
 
@@ -167,10 +182,12 @@ const LessonView: React.FC = () => {
               }`}
           >
               <div className="text-right">
-                  <div className="text-xs text-slate-500 font-medium">Next</div>
-                  <div className="font-semibold">{nextTopic ? nextTopic.title : 'End of Category'}</div>
+                  <div className="text-xs text-slate-500 font-medium">
+                    {isNextWrap ? 'Loop to Start' : 'Next'}
+                  </div>
+                  <div className="font-semibold">{nextTopic ? nextTopic.title : 'No Next Topic'}</div>
               </div>
-              <ChevronRight size={20} />
+              {isNextWrap ? <RotateCw size={20} className="text-slate-400" /> : <ChevronRight size={20} />}
           </button>
       </div>
     </div>
