@@ -35,3 +35,9 @@ export interface ChatMessage {
   role: 'user' | 'model';
   text: string;
 }
+
+export interface UserProgress {
+  lastLessonId: string | null;
+  history: string[]; // List of unique lesson IDs visited (last 5)
+  completed: string[]; // List of lesson IDs marked as completed
+}

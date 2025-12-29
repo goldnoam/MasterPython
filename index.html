@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
@@ -7,11 +7,22 @@
     <title>PyMaster - Learn Python</title>
     <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              mono: ['Fira Code', 'monospace'],
+            },
+          }
+        }
+      }
+    </script>
     <style>
       body {
-        font-family: 'Inter', sans-serif;
-        background-color: #0f172a; /* Slate 900 */
-        color: #e2e8f0; /* Slate 200 */
+        transition: background-color 0.3s ease, color 0.3s ease;
       }
       .font-mono {
         font-family: 'Fira Code', monospace;
@@ -22,13 +33,22 @@
         height: 8px;
       }
       ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .dark ::-webkit-scrollbar-track {
         background: #1e293b; 
       }
       ::-webkit-scrollbar-thumb {
-        background: #475569; 
+        background: #cbd5e1; 
         border-radius: 4px;
       }
+      .dark ::-webkit-scrollbar-thumb {
+        background: #475569; 
+      }
       ::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8; 
+      }
+      .dark ::-webkit-scrollbar-thumb:hover {
         background: #64748b; 
       }
       /* Animations */
@@ -38,6 +58,11 @@
       }
       .animate-fade-in {
         animation: fadeIn 0.2s ease-out forwards;
+      }
+      
+      /* Prose adjustments for light/dark */
+      .prose {
+        max-width: none;
       }
     </style>
   <script type="importmap">
@@ -58,7 +83,7 @@
 }
 </script>
 </head>
-  <body>
+  <body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-200">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>

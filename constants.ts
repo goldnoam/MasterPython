@@ -12,18 +12,18 @@ export const CATEGORY_ICONS: Record<Category, any> = {
   [Category.STARTER]: BookOpen,
   [Category.ADVANCED]: Zap,
   [Category.ML]: Layers,
-  [Category.CV]: Monitor, // Using Monitor as a proxy for visual stuff
+  [Category.CV]: Monitor,
   [Category.NETWORK]: Network,
-  [Category.UI]: Cpu, // Generic tech icon
+  [Category.UI]: Cpu,
 };
 
 export const CATEGORY_DESCRIPTIONS: Record<Category, string> = {
   [Category.STARTER]: "Master the fundamentals: Variables, Control Flow, and Functions.",
   [Category.ADVANCED]: "Deep dive into Decorators, Generators, and Concurrency.",
-  [Category.ML]: "Explore Data Science, Neural Networks, and Predictive Models.",
-  [Category.CV]: "Learn Image Processing, Face Detection, and Object Tracking.",
+  [Category.ML]: "Explore Data Science, Neural Networks, PyTorch, and Predictive Models.",
+  [Category.CV]: "Learn Image Processing, Face Detection, and Object Tracking with OpenCV.",
   [Category.NETWORK]: "Understand Sockets, TCP/IP, and Asynchronous I/O.",
-  [Category.UI]: "Build modern GUIs and Web Applications."
+  [Category.UI]: "Build modern GUIs with PyQt and Web Apps with Flask or Streamlit."
 };
 
 export const TOPICS: Topic[] = [
@@ -44,13 +44,14 @@ export const TOPICS: Topic[] = [
   { id: 'm1', category: Category.ML, title: 'NumPy Basics', description: 'High-performance multidimensional array object.' },
   { id: 'm2', category: Category.ML, title: 'Pandas DataFrames', description: 'Data manipulation and analysis.' },
   { id: 'm3', category: Category.ML, title: 'Linear Regression', description: 'Predicting continuous values using Scikit-Learn.' },
-  { id: 'm4', category: Category.ML, title: 'Basic Neural Network', description: 'Understanding layers, weights, and activation.' },
+  { id: 'm4', category: Category.ML, title: 'PyTorch Tensors', description: 'The building blocks of Deep Learning models.' },
+  { id: 'm5', category: Category.ML, title: 'Neural Networks (PyTorch)', description: 'Creating and training simple layers.' },
 
   // Computer Vision
   { id: 'c1', category: Category.CV, title: 'OpenCV Basics', description: 'Reading, displaying, and writing images.' },
   { id: 'c2', category: Category.CV, title: 'Image Processing', description: 'Blurring, thresholding, and edge detection.' },
   { id: 'c3', category: Category.CV, title: 'Face Detection', description: 'Using Haar Cascades or HOG.' },
-  { id: 'c4', category: Category.CV, title: 'Object Tracking', description: 'Tracking moving objects in video.' },
+  { id: 'c4', category: Category.CV, title: 'Feature Matching', description: 'Matching keypoints between different images.' },
 
   // Network
   { id: 'n1', category: Category.NETWORK, title: 'Sockets Intro', description: 'Understanding IP, Ports, and Sockets.' },
@@ -60,12 +61,11 @@ export const TOPICS: Topic[] = [
 
   // UI
   { id: 'u1', category: Category.UI, title: 'Tkinter Basics', description: 'Creating windows, buttons, and labels.' },
-  { id: 'u2', category: Category.UI, title: 'PyQt/PySide', description: 'Advanced GUI widgets and layouts.' },
+  { id: 'u2', category: Category.UI, title: 'PyQt Signals & Slots', description: 'The core mechanism of Qt for handling events.' },
   { id: 'u3', category: Category.UI, title: 'Flask Web App', description: 'Routing and templates for web UI.' },
-  { id: 'u4', category: Category.UI, title: 'Streamlit', description: 'Rapid data app development.' },
+  { id: 'u4', category: Category.UI, title: 'Streamlit Interactivity', description: 'Widgets, session state, and rapid data apps.' },
 ];
 
-// Static Lesson Data for Offline Mode
 export const LESSON_DATA: Record<string, LessonContent> = {
   // --- Starter ---
   's1': {
@@ -351,31 +351,43 @@ Mean:     3.0`,
   },
   'm2': {
       title: 'Pandas DataFrames',
-      explanation: "Pandas provides the DataFrame, a 2D labeled data structure akin to a SQL table or Excel spreadsheet.",
+      explanation: "Pandas is perfect for data manipulation. The **DataFrame** is the core structure for tabular data.",
       codeExample: `import pandas as pd
 
 data = {
-    'Name': ['Alice', 'Bob', 'Charlie'],
-    'Age': [25, 30, 35],
-    'City': ['New York', 'Paris', 'London']
+    'Product': ['A', 'B', 'A', 'C', 'B'],
+    'Sales': [100, 200, 150, 300, 250]
 }
-
 df = pd.DataFrame(data)
 
-# Filter for Age > 28
-older_users = df[df['Age'] > 28]
+# Advanced: GroupBy
+summary = df.groupby('Product').sum()
 
-print(older_users)`,
-      codeExplanation: "- `pd.DataFrame(data)` creates the table.\n- `df['Age'] > 28` creates a boolean filter.\n- `df[...]` applies that filter to return rows where the condition is true.",
-      challenge: "Create a DataFrame with columns 'Product' and 'Price', then filter for prices under $10.",
-      expectedOutput: `      Name  Age    City
-1      Bob   30   Paris
-2  Charlie   35  London`,
+print("Full DataFrame:")
+print(df)
+print("\nSales Summary by Product:")
+print(summary)`,
+      codeExplanation: "- `pd.DataFrame` creates a table.\n- `groupby('Product')` clusters rows by the Product column.\n- `.sum()` aggregates the numerical data for each group.",
+      challenge: "Create a DataFrame with 'City' and 'Population' and find the city with the maximum population.",
+      expectedOutput: `Full DataFrame:
+  Product  Sales
+0       A    100
+1       B    200
+2       A    150
+3       C    300
+4       B    250
+
+Sales Summary by Product:
+         Sales
+Product       
+A          250
+B          450
+C          300`,
     quiz: {
-      question: "Which Pandas data structure represents tabular data with rows and columns?",
-      options: ["Series", "Panel", "DataFrame", "Table"],
+      question: "Which function allows you to aggregate data based on categories in a Pandas column?",
+      options: ["aggregate()", "sum_by()", "groupby()", "filter()"],
       correctAnswer: 2,
-      explanation: "A DataFrame is the primary Pandas structure for 2D tabular data."
+      explanation: "`groupby()` is used to split the data into groups based on some criteria."
     }
   },
   'm3': {
@@ -405,35 +417,75 @@ print(f"Predicted score for 6 hours: {prediction[0]}")`,
     }
   },
   'm4': {
-      title: 'Basic Neural Network',
-      explanation: "A neural network consists of layers of nodes (neurons). It learns by adjusting weights to minimize error between predictions and actual targets.",
-      codeExample: `import tensorflow as tf
-from tensorflow import keras
-import numpy as np
+      title: 'PyTorch Tensors',
+      explanation: "PyTorch is a leading deep learning framework. A **Tensor** is a multi-dimensional matrix, similar to NumPy's ndarray, but can run on a GPU.",
+      codeExample: `import torch
 
-# Simple model: y = 2x - 1
-model = keras.Sequential([keras.layers.Dense(units=1, input_shape=[1])])
-model.compile(optimizer='sgd', loss='mean_squared_error')
+# Create a tensor from a list
+t = torch.tensor([1, 2, 3])
 
-xs = np.array([-1.0, 0.0, 1.0, 2.0, 3.0, 4.0], dtype=float)
-ys = np.array([-3.0, -1.0, 1.0, 3.0, 5.0, 7.0], dtype=float)
+# Create a random tensor
+rand_t = torch.rand(2, 3)
 
-# Train the model (simulated output for brevity)
-# model.fit(xs, ys, epochs=500)
+# Arithmetic is similar to NumPy
+sum_t = t + 10
 
-print("Model trained.")
-print("Predicting for x = 10.0 (Expected ~19.0)")
-print("Prediction: [[18.987]]")`,
-      codeExplanation: "- `Dense(units=1)` creates a single neuron layer.\n- `sgd` (Stochastic Gradient Descent) is the optimizer that adjusts weights.\n- The model learns the relationship `2x - 1`.",
-      challenge: "Define a Sequential model with one Dense layer.",
-      expectedOutput: `Model trained.
-Predicting for x = 10.0 (Expected ~19.0)
-Prediction: [[18.987]]`,
+print(f"1D Tensor: {t}")
+print(f"2x3 Random Tensor:\\n{rand_t}")
+print(f"Addition result: {sum_t}")`,
+      codeExplanation: "- `torch.tensor` converts Python data to PyTorch format.\n- `torch.rand(rows, cols)` generates values between 0 and 1.\n- Operations are optimized for mathematical computation.",
+      challenge: "Create a 3x3 PyTorch tensor filled with ones using `torch.ones()`.",
+      expectedOutput: `1D Tensor: tensor([1, 2, 3])
+2x3 Random Tensor:
+tensor([[0.23, 0.45, 0.67],
+        [0.12, 0.89, 0.34]])
+Addition result: tensor([11, 12, 13])`,
     quiz: {
-      question: "Which Keras layer type connects every neuron in one layer to every neuron in the next?",
-      options: ["Conv2D", "Dense", "Flatten", "Dropout"],
+      question: "What is a PyTorch Tensor most similar to in the NumPy library?",
+      options: ["list", "ndarray", "DataFrame", "Series"],
       correctAnswer: 1,
-      explanation: "A `Dense` layer (fully connected layer) connects every input to every output within that layer."
+      explanation: "Tensors are very similar to NumPy ndarrays, but with the added ability to run on GPUs and support automatic differentiation."
+    }
+  },
+  'm5': {
+      title: 'Neural Networks (PyTorch)',
+      explanation: "Neural networks are built using layers. In PyTorch, we typically inherit from `torch.nn.Module` to define our model structure.",
+      codeExample: `import torch.nn as nn
+import torch
+
+class SimpleNet(nn.Module):
+    def __init__(self):
+        super(SimpleNet, self).__init__()
+        # 1 input, 5 hidden, 1 output
+        self.layer1 = nn.Linear(1, 5)
+        self.layer2 = nn.Linear(5, 1)
+
+    def forward(self, x):
+        x = torch.relu(self.layer1(x))
+        x = self.layer2(x)
+        return x
+
+model = SimpleNet()
+print("Model Architecture:")
+print(model)
+
+# Simulated Forward Pass
+x = torch.tensor([[10.0]])
+output = model(x)
+print(f"Input: {x.item()} -> Output shape: {output.shape}")`,
+      codeExplanation: "- `nn.Linear` defines a fully connected layer.\n- `forward()` defines the data flow.\n- `torch.relu` is an activation function used to introduce non-linearity.",
+      challenge: "Add a third layer to the network that has 2 output neurons.",
+      expectedOutput: `Model Architecture:
+SimpleNet(
+  (layer1): Linear(in_features=1, out_features=5, bias=True)
+  (layer2): Linear(in_features=5, out_features=1, bias=True)
+)
+Input: 10.0 -> Output shape: torch.Size([1, 1])`,
+    quiz: {
+      question: "Which base class must you inherit from when creating a neural network in PyTorch?",
+      options: ["torch.Network", "nn.Linear", "nn.Module", "torch.Model"],
+      correctAnswer: 2,
+      explanation: "`nn.Module` is the base class for all neural network modules in PyTorch."
     }
   },
 
@@ -524,29 +576,32 @@ Drew rectangles at detected coordinates.`,
     }
   },
   'c4': {
-      title: 'Object Tracking',
-      explanation: "Tracking involves locating a moving object across frames in a video. Common algorithms include CSRT and KCF.",
+      title: 'Feature Matching',
+      explanation: "Feature matching finds common points between two different images (e.g., a logo vs. a photo of a store). Algorithms like SIFT or ORB are used.",
       codeExample: `import cv2
 
-tracker = cv2.TrackerCSRT_create()
-# tracker.init(frame, bbox)
+orb = cv2.ORB_create()
 
-# In a loop:
-# success, box = tracker.update(new_frame)
+# keypoints1, descriptors1 = orb.detectAndCompute(img1, None)
+# keypoints2, descriptors2 = orb.detectAndCompute(img2, None)
 
-print("Tracker initialized with bounding box.")
-print("Processing Frame 1: Tracking success.")
-print("Processing Frame 2: Tracking success.")`,
-      codeExplanation: "- Tracking is generally faster than detecting objects in every single frame.\n- You detect once, then track for subsequent frames.",
-      challenge: "Look up the difference between KCF (fast) and CSRT (accurate) trackers.",
-      expectedOutput: `Tracker initialized with bounding box.
-Processing Frame 1: Tracking success.
-Processing Frame 2: Tracking success.`,
+# Matcher using Brute Force
+# bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
+# matches = bf.match(descriptors1, descriptors2)
+
+print("ORB Detector initialized.")
+print("Keypoints detected in both images.")
+print("Matching points found via Brute Force Matcher.")`,
+      codeExplanation: "- ORB (Oriented FAST and Rotated BRIEF) is a fast alternative to SIFT.\n- `detectAndCompute` finds unique 'landmarks' in an image.\n- `BFMatcher` pairs landmarks between images based on similarity.",
+      challenge: "Search for 'Scale Invariant Feature Transform' (SIFT) and find out why it was patented for so long.",
+      expectedOutput: `ORB Detector initialized.
+Keypoints detected in both images.
+Matching points found via Brute Force Matcher.`,
     quiz: {
-      question: "What is the primary advantage of Object Tracking over Object Detection in video?",
-      options: ["It is more accurate for static images", "It is generally faster than running detection on every frame", "It can identify the name of the object", "It works in 3D"],
+      question: "Which OpenCV algorithm is commonly used as a fast, open-source alternative to SIFT for finding image features?",
+      options: ["Canny", "ORB", "Haar Cascade", "Gaussian"],
       correctAnswer: 1,
-      explanation: "Tracking algorithms locate an object in subsequent frames based on its previous position, which is computationally cheaper than detecting it from scratch every time."
+      explanation: "ORB is an efficient, free alternative to SIFT and SURF for detecting and matching feature points."
     }
   },
 
@@ -701,30 +756,33 @@ Contains: Label 'Hello Tkinter!', Button 'Click Me'`,
     }
   },
   'u2': {
-      title: 'PyQt/PySide',
-      explanation: "PyQt (or PySide) wraps the Qt framework. It is more feature-rich than Tkinter and allows for professional-grade UIs.",
-      codeExample: `from PyQt6.QtWidgets import QApplication, QLabel, QWidget
+      title: 'PyQt Signals & Slots',
+      explanation: "PyQt uses a mechanism called **Signals & Slots** to handle events. A Signal is emitted when an event occurs, and a Slot is a function called in response.",
+      codeExample: `from PyQt6.QtWidgets import QPushButton, QApplication
+import sys
 
-# app = QApplication([])
-# window = QWidget()
-# window.setWindowTitle("PyQt App")
-# label = QLabel("Hello World", parent=window)
-# window.show()
-# app.exec()
+def handle_click():
+    print("Button clicked!")
 
-print("PyQt Application Started")
-print("Window Title: PyQt App")
-print("Widget: Label 'Hello World'")`,
-      codeExplanation: "- PyQt applications rely on a `QApplication` event loop.\n- Widgets like `QLabel` are building blocks of the UI.",
-      challenge: "What is the difference between PyQt6 and PySide6?",
-      expectedOutput: `PyQt Application Started
-Window Title: PyQt App
-Widget: Label 'Hello World'`,
+# app = QApplication(sys.argv)
+button = QPushButton("Click Me")
+
+# Connect the signal (clicked) to the slot (handle_click)
+button.clicked.connect(handle_click)
+
+print("PyQt button created.")
+print("Signal 'clicked' connected to function 'handle_click'.")
+# button.show()
+# app.exec()`,
+      codeExplanation: "- `button.clicked` is the Signal.\n- `handle_click` is the Slot.\n- `.connect()` is how you link them. This decoupling makes Qt apps very flexible.",
+      challenge: "Search how to pass arguments to a Slot using a lambda function in PyQt.",
+      expectedOutput: `PyQt button created.
+Signal 'clicked' connected to function 'handle_click'.`,
     quiz: {
-      question: "Every PyQt application must have exactly one instance of which class?",
-      options: ["QMainWindow", "QWidget", "QApplication", "QLabel"],
+      question: "What is the name of the mechanism PyQt uses to handle communication between objects (e.g., buttons and functions)?",
+      options: ["Input & Output", "Action & Reaction", "Signals & Slots", "Call & Response"],
       correctAnswer: 2,
-      explanation: "You must create a `QApplication` object to manage the GUI application's control flow and main settings."
+      explanation: "Signals and Slots is the core mechanism of the Qt framework for handling events and object communication."
     }
   },
   'u3': {
@@ -757,35 +815,34 @@ Response: <h1>Hello from Flask!</h1>`,
     }
   },
   'u4': {
-      title: 'Streamlit',
-      explanation: "Streamlit turns data scripts into shareable web apps in minutes. It's designed specifically for Data Science/ML projects.",
+      title: 'Streamlit Interactivity',
+      explanation: "Streamlit apps rerender the entire script when a user interacts with a widget. To store data between these rerenders, we use **Session State**.",
       codeExample: `import streamlit as st
-import pandas as pd
 
-st.title("My Data App")
+st.title("Counter App")
 
-df = pd.DataFrame({'col1': [1, 2], 'col2': [3, 4]})
+# Initialize session state
+if 'count' not in st.session_state:
+    st.session_state.count = 0
 
-st.write("Here is my data:")
-st.write(df)
+if st.button('Increment'):
+    st.session_state.count += 1
 
-st.button("Click me")
+st.write(f"Current Count: {st.session_state.count}")
 
-print("Streamlit app rendering...")
-print("Title: My Data App")
-print("Table displayed.")
-print("Button displayed.")`,
-      codeExplanation: "- No HTML/CSS knowledge required.\n- `st.write()` creates tables, text, or graphs automatically based on the data type passed to it.",
-      challenge: "How would you add a line chart in Streamlit?",
-      expectedOutput: `Streamlit app rendering...
-Title: My Data App
-Table displayed.
-Button displayed.`,
+print("Streamlit app running...")
+print("Button 'Increment' rendered.")
+print(f"Session State 'count': {st.session_state.count if 'count' in st.session_state else 0}")`,
+      codeExplanation: "- `st.session_state` is a dictionary-like object shared between rerenders.\n- Without session state, the `count` variable would reset to 0 every time a button is clicked.",
+      challenge: "How do you add a sidebar to a Streamlit app?",
+      expectedOutput: `Streamlit app running...
+Button 'Increment' rendered.
+Session State 'count': 0`,
     quiz: {
-      question: "Which Streamlit function is the 'Swiss Army knife' for displaying text, dataframes, and charts?",
-      options: ["st.print()", "st.show()", "st.write()", "st.display()"],
-      correctAnswer: 2,
-      explanation: "`st.write()` is a powerful function that renders different types of content depending on what you pass to it."
+      question: "Which object is used in Streamlit to persist data when the user interacts with the app?",
+      options: ["st.persist", "st.session_state", "st.cache", "st.memory"],
+      correctAnswer: 1,
+      explanation: "`st.session_state` is designed to store variables that need to persist across multiple reruns of the script."
     }
   }
 };

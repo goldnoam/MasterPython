@@ -10,7 +10,6 @@ const QuizSection: React.FC<QuizSectionProps> = ({ quiz }) => {
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  // Reset state when the quiz question changes (e.g. navigation to next lesson)
   useEffect(() => {
     setSelectedOption(null);
     setIsSubmitted(false);
@@ -25,35 +24,34 @@ const QuizSection: React.FC<QuizSectionProps> = ({ quiz }) => {
   const isCorrect = selectedOption === quiz.correctAnswer;
 
   return (
-    <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 md:p-8 relative overflow-hidden">
-      {/* Decorative background element */}
+    <div className="bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 md:p-8 relative overflow-hidden shadow-sm">
       <div className="absolute top-0 right-0 p-24 bg-blue-500/5 blur-3xl rounded-full -mr-12 -mt-12 pointer-events-none"></div>
 
       <div className="flex items-center gap-2 mb-6">
-        <div className="p-2 bg-blue-500/20 rounded-lg text-blue-400">
+        <div className="p-2 bg-blue-500/10 dark:bg-blue-500/20 rounded-lg text-blue-600 dark:text-blue-400">
           <HelpCircle size={20} />
         </div>
-        <h2 className="text-xl font-bold text-slate-100">Knowledge Check</h2>
+        <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">Knowledge Check</h2>
       </div>
 
-      <h3 className="text-lg font-medium text-slate-200 mb-6 leading-relaxed">
+      <h3 className="text-lg font-medium text-slate-700 dark:text-slate-200 mb-6 leading-relaxed">
         {quiz.question}
       </h3>
 
       <div className="space-y-3 mb-8">
         {quiz.options.map((option, index) => {
-          let optionStyle = "border-slate-700 bg-slate-800/50 hover:bg-slate-800 hover:border-blue-500/50 text-slate-300";
+          let optionStyle = "border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 hover:border-blue-400 dark:hover:border-blue-500/50 text-slate-700 dark:text-slate-300";
           
           if (isSubmitted) {
             if (index === quiz.correctAnswer) {
-              optionStyle = "border-green-500/50 bg-green-500/10 text-green-300";
+              optionStyle = "border-green-500/50 bg-green-50 dark:bg-green-500/10 text-green-700 dark:text-green-300";
             } else if (index === selectedOption && index !== quiz.correctAnswer) {
-              optionStyle = "border-red-500/50 bg-red-500/10 text-red-300";
+              optionStyle = "border-red-500/50 bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-300";
             } else {
-              optionStyle = "border-slate-800 bg-slate-900/50 text-slate-500 opacity-50";
+              optionStyle = "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 text-slate-400 dark:text-slate-500 opacity-50";
             }
           } else if (selectedOption === index) {
-            optionStyle = "border-blue-500 bg-blue-500/10 text-blue-100 shadow-[0_0_15px_rgba(59,130,246,0.15)]";
+            optionStyle = "border-blue-500 bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-100 shadow-[0_0_15px_rgba(59,130,246,0.1)] dark:shadow-[0_0_15px_rgba(59,130,246,0.15)]";
           }
 
           return (
@@ -65,10 +63,10 @@ const QuizSection: React.FC<QuizSectionProps> = ({ quiz }) => {
             >
               <span className="font-medium">{option}</span>
               {isSubmitted && index === quiz.correctAnswer && (
-                <CheckCircle size={20} className="text-green-500" />
+                <CheckCircle size={20} className="text-green-600 dark:text-green-500" />
               )}
               {isSubmitted && index === selectedOption && index !== quiz.correctAnswer && (
-                <XCircle size={20} className="text-red-500" />
+                <XCircle size={20} className="text-red-600 dark:text-red-500" />
               )}
             </button>
           );
@@ -82,25 +80,25 @@ const QuizSection: React.FC<QuizSectionProps> = ({ quiz }) => {
           className={`px-6 py-2.5 rounded-lg font-semibold text-sm transition-all flex items-center gap-2 ${
             selectedOption !== null
               ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/20'
-              : 'bg-slate-800 text-slate-500 cursor-not-allowed'
+              : 'bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed'
           }`}
         >
           Check Answer
           <ArrowRight size={16} />
         </button>
       ) : (
-        <div className={`p-4 rounded-xl border ${isCorrect ? 'bg-green-500/10 border-green-500/20' : 'bg-red-500/10 border-red-500/20'} animate-in fade-in slide-in-from-bottom-2`}>
+        <div className={`p-4 rounded-xl border ${isCorrect ? 'bg-green-50 dark:bg-green-500/10 border-green-200 dark:border-green-500/20' : 'bg-red-50 dark:bg-red-500/10 border-red-200 dark:border-red-500/20'} animate-in fade-in slide-in-from-bottom-2`}>
           <div className="flex items-start gap-3">
             {isCorrect ? (
-              <CheckCircle className="text-green-500 shrink-0 mt-0.5" size={20} />
+              <CheckCircle className="text-green-600 dark:text-green-500 shrink-0 mt-0.5" size={20} />
             ) : (
-              <XCircle className="text-red-500 shrink-0 mt-0.5" size={20} />
+              <XCircle className="text-red-600 dark:text-red-500 shrink-0 mt-0.5" size={20} />
             )}
             <div>
-              <p className={`font-bold mb-1 ${isCorrect ? 'text-green-400' : 'text-red-400'}`}>
+              <p className={`font-bold mb-1 ${isCorrect ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'}`}>
                 {isCorrect ? 'Correct!' : 'Incorrect'}
               </p>
-              <p className="text-slate-300 text-sm leading-relaxed">
+              <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
                 {quiz.explanation}
               </p>
             </div>
