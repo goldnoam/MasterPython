@@ -4,7 +4,8 @@ export enum Category {
   ML = 'Machine Learning',
   CV = 'Computer Vision',
   NETWORK = 'Network & TCP/IP',
-  UI = 'UI & GUI'
+  UI = 'UI & GUI',
+  SCIENTIFIC = 'Scientific Computing'
 }
 
 export interface Topic {

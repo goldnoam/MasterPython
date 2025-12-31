@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { Home, Book, HelpCircle, Sun, Moon, WifiOff, History, PlayCircle, CheckCircle2, AlertTriangle, Database } from 'lucide-react';
+import { Home, Book, HelpCircle, Sun, Moon, WifiOff, Wifi, History, PlayCircle, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { Category, UserProgress, Topic } from '../types';
 import { CATEGORY_ICONS, CATEGORY_DESCRIPTIONS, TOPICS } from '../constants';
 
@@ -13,6 +13,7 @@ const Sidebar: React.FC = () => {
   const [isDark, setIsDark] = useState(true);
   const [progress, setProgress] = useState<UserProgress | null>(null);
   const [storageError, setStorageError] = useState<'unavailable' | 'full' | null>(null);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   const isStorageAvailable = () => {
     try {
@@ -30,7 +31,6 @@ const Sidebar: React.FC = () => {
       setStorageError('unavailable');
       return;
     }
-
     try {
       const saved = localStorage.getItem(PROGRESS_KEY);
       if (saved) {
@@ -39,12 +39,10 @@ const Sidebar: React.FC = () => {
       setStorageError(null);
     } catch (e) {
       console.error('Failed to load progress:', e);
-      // Check if it's a parsing error or something else
       setStorageError('unavailable');
     }
   };
 
-  // Sync theme with document element
   useEffect(() => {
     const root = window.document.documentElement;
     if (isDark) {
@@ -56,28 +54,24 @@ const Sidebar: React.FC = () => {
 
   useEffect(() => {
     loadProgress();
-    // Listen for progress updates from LessonView
-    const handleUpdate = () => {
-      // Small delay to ensure state is committed in LessonView before we read it
-      // though localStorage is synchronous, this handles cross-tab or async triggers
-      loadProgress();
-    };
-    
+    const handleUpdate = () => loadProgress();
+    const handleStatusChange = () => setIsOnline(navigator.onLine);
+
     window.addEventListener('progress-updated', handleUpdate);
-    // Also listen for storage events (e.g. from other tabs)
     window.addEventListener('storage', (e) => {
       if (e.key === PROGRESS_KEY) loadProgress();
     });
+    window.addEventListener('online', handleStatusChange);
+    window.addEventListener('offline', handleStatusChange);
     
     return () => {
       window.removeEventListener('progress-updated', handleUpdate);
-      window.removeEventListener('storage', handleUpdate);
+      window.removeEventListener('online', handleStatusChange);
+      window.removeEventListener('offline', handleStatusChange);
     };
   }, []);
 
-  const toggleTheme = () => {
-    setIsDark(!isDark);
-  };
+  const toggleTheme = () => setIsDark(!isDark);
 
   const handleMouseEnter = (cat: Category, e: React.MouseEvent) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -85,9 +79,7 @@ const Sidebar: React.FC = () => {
     setTooltipTop(rect.top);
   };
 
-  const handleMouseLeave = () => {
-    setHoveredCategory(null);
-  };
+  const handleMouseLeave = () => setHoveredCategory(null);
 
   const navItems = [
     { to: "/", icon: Home, label: "Home" },
@@ -122,6 +114,15 @@ const Sidebar: React.FC = () => {
 
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex fixed left-0 top-0 h-full w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex-col z-50 transition-all duration-300">
+        
+        {/* Connection Status Banner */}
+        {!isOnline && (
+          <div className="bg-amber-500 text-amber-950 px-4 py-2 flex items-center gap-2 text-xs font-bold animate-pulse">
+            <WifiOff size={14} />
+            OFFLINE MODE ENABLED
+          </div>
+        )}
+
         <div className="p-6 flex items-center justify-between border-b border-slate-200 dark:border-slate-800">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center shrink-0">
@@ -129,8 +130,8 @@ const Sidebar: React.FC = () => {
             </div>
             <span className="text-xl font-bold text-slate-800 dark:text-slate-100">PyMaster</span>
           </div>
-          <div title="Offline Ready" className="text-emerald-500 flex items-center gap-2">
-            <WifiOff size={16} />
+          <div title={isOnline ? "Online" : "Offline Mode"} className={isOnline ? "text-blue-500" : "text-amber-500"}>
+            {isOnline ? <Wifi size={16} /> : <WifiOff size={16} />}
           </div>
         </div>
 
@@ -214,11 +215,14 @@ const Sidebar: React.FC = () => {
               return (
                   <div 
                       key={cat} 
+                      title={`${cat}: ${CATEGORY_DESCRIPTIONS[cat]}`}
                       className="group flex items-center gap-3 p-3 rounded-xl text-slate-500 dark:text-slate-400 cursor-default hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors"
                       onMouseEnter={(e) => handleMouseEnter(cat, e)}
                       onMouseLeave={handleMouseLeave}
                   >
-                      <Icon size={20} className="group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" />
+                      <div className="shrink-0 relative">
+                        <Icon size={20} className="group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" />
+                      </div>
                       <span className="text-sm font-medium">{cat}</span>
                   </div>
               )
